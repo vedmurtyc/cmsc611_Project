@@ -1,10 +1,10 @@
 import random
 
-BRANCH=6
-ITERATIONS=1
+NUM_BRANCHES = 10
+ITERATIONS   = 1
 
 def branches(i):
-	arr = [-1]*6
+	arr = [-1]*NUM_BRANCHES
 	
 	if (i%2) == 0:
 		i += 1
