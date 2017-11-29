@@ -29,7 +29,7 @@ def LRPredict(GHR):
 
 def helperLearn(actual, pred, x, branchNo):
 	eta = 0.3
-	inp = x[0]
+	inp = x
 	error = actual - pred
 
 	for i in range(len(inp)):
@@ -52,8 +52,8 @@ def LRLearn(x, y):
 ghr = [0]*NUM_BRANCHES
 GHR = getGHR(ghr)
 
-x = runCode()
-y = x[0]
+x = runCode()[0]
+y = x
 LRLearn(x, y)
 print "Weights: ", weights
 
