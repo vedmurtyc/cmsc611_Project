@@ -1,9 +1,8 @@
 import math
-from sample1 import *
+from globalVars import *
 
-NUM_BRANCHES= 10
-weights 	= [[-1]*NUM_BRANCHES for _ in range(NUM_BRANCHES)]
-gradient 	= [0]*NUM_BRANCHES
+weights 	= [[0]*NUM_OF_BRANCHES for _ in range(NUM_OF_BRANCHES)]
+gradient 	= [0]*NUM_OF_BRANCHES
 
 def getGHR(ghr):
 	GHR = []
@@ -25,10 +24,10 @@ def helperPredict(GHR, branchNo):
 	return prediction
 
 def LRPredict(GHR):
-	return [helperPredict(GHR, i) for i in range(NUM_BRANCHES)]
+	return [helperPredict(GHR, i) for i in range(NUM_OF_BRANCHES)]
 
 def helperLearn(actual, pred, x, branchNo):
-	eta = 0.3
+	eta = 0.5
 	inp = x
 	error = actual - pred
 
@@ -37,29 +36,13 @@ def helperLearn(actual, pred, x, branchNo):
 
 	for i in range(len(weights[branchNo])):
 		weights[branchNo][i] += eta*gradient[i]
-		eta *= 0.99
+		# eta *= 0.99
 
 
 def LRLearn(x, y):
-	predictions = LRPredict(GHR)
+	predictions = LRPredict(x)
 
-	for branchNo in range(NUM_BRANCHES):
+	for branchNo in range(NUM_OF_BRANCHES):
 		actual = y[branchNo]
 		pred = predictions[branchNo]
 		helperLearn(actual, pred, x, branchNo)
-
-
-ghr = [0]*NUM_BRANCHES
-GHR = getGHR(ghr)
-
-x = runCode()[0]
-y = x
-LRLearn(x, y)
-print "Weights: ", weights
-
-
-
-
-
-
-

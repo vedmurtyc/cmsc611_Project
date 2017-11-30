@@ -1,13 +1,9 @@
-import numpy as np
-# srcCode = "D:/Study/ACA/project/sample1.py"
-from sample1 import runCode
 import os
 import pickle
+import numpy as np
 import logisticRegression as lr
-
-DEBUG     = 0
-ITERATION = 5
-NUM_OF_BRANCHES = 10
+from sample1 import runCode
+from globalVars import *
 
 class BranchPredictor(object):
 	
@@ -22,7 +18,7 @@ class BranchPredictor(object):
 							}
 
 	def perceptron_predict(self):
-		self.p_pred = [1]*NUM_OF_BRANCHES # Give call to Perceptron
+		self.p_pred = [0]*NUM_OF_BRANCHES # Give call to Perceptron
 		pass 
 
 	def perceptron_learn(self):
@@ -32,7 +28,7 @@ class BranchPredictor(object):
 		self.lr_pred = lr.LRPredict(self.GHR)
 
 	def lr_learn(self, actOutput):
-		lr.LRLearn([self.GHR], actOutput)
+		lr.LRLearn(self.GHR, actOutput)
 
 	def lvq_predict(self):
 		pass
@@ -45,7 +41,9 @@ class BranchPredictor(object):
 			self.GHR[i] += output[i]
 
 	def calculateDiff(self, output):
-		print("ACTUAL VS EXPECTED ", self.lr_pred, output)
+		if(DEBUG):
+			print("ACTUAL ",   self.lr_pred)
+			print("EXPECTED ", output      )
 		self.accuracy["perceptron"] += sum(map(lambda x, y : x*y==1, self.p_pred,   output)) / NUM_OF_BRANCHES
 		self.accuracy["logistic"]   += sum(map(lambda x, y : x*y==1, self.lr_pred,  output)) / NUM_OF_BRANCHES
 		self.accuracy["LVQ"]        += sum(map(lambda x, y : x*y==1, self.lvq_pred, output)) / NUM_OF_BRANCHES
@@ -79,4 +77,3 @@ for _ in range(ITERATION):
 	bp.updateGHR(actualOutput)
 
 bp.calculateAccuracy(ITERATION)
-
