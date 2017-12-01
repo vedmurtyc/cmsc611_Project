@@ -2,6 +2,7 @@ import os
 import pickle
 import numpy as np
 import logisticRegression as lr
+import perceptron as pt
 from sample1 import runCode
 from globalVars import *
 
@@ -18,11 +19,10 @@ class BranchPredictor(object):
 							}
 
 	def perceptron_predict(self):
-		self.p_pred = [0]*NUM_OF_BRANCHES # Give call to Perceptron
-		pass 
+		self.p_pred = pt.PPredict(self.GHR)
 
-	def perceptron_learn(self):
-		pass
+	def perceptron_learn(self, actualOutput):
+		pt.PLearn(self.GHR, actualOutput)
 
 	def lr_predict(self):
 		self.lr_pred = lr.LRPredict(self.GHR)
@@ -62,13 +62,13 @@ for _ in range(ITERATION):
 	# Get the 3 predictions
 	bp.perceptron_predict()
 	bp.lr_predict()
-	bp.lvq_predict()
+	# bp.lvq_predict()
 	
 	# Run the actual Code
 	actualOutput = runCode()[0]
 
 	# Send the actual O/P to model for updation
-	# bp.perceptron_learn(actualOutput)
+	bp.perceptron_learn(actualOutput)
 	bp.lr_learn(actualOutput)
 	# bp.lvq_learn(actualOutput)
 	bp.calculateDiff(actualOutput)
