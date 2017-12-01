@@ -42,8 +42,8 @@ class BranchPredictor(object):
 
 	def calculateDiff(self, output):
 		if(DEBUG):
-			print("ACTUAL ",   self.lr_pred)
-			print("EXPECTED ", output      )
+			print("ACTUAL ",   self.p_pred)
+			print("EXPECTED ", output     )
 		self.accuracy["perceptron"] += sum(map(lambda x, y : x*y==1, self.p_pred,   output)) / NUM_OF_BRANCHES
 		self.accuracy["logistic"]   += sum(map(lambda x, y : x*y==1, self.lr_pred,  output)) / NUM_OF_BRANCHES
 		self.accuracy["LVQ"]        += sum(map(lambda x, y : x*y==1, self.lvq_pred, output)) / NUM_OF_BRANCHES
@@ -66,7 +66,6 @@ for _ in range(ITERATION):
 	
 	# Run the actual Code
 	actualOutput = runCode()[0]
-
 	# Send the actual O/P to model for updation
 	bp.perceptron_learn(actualOutput)
 	bp.lr_learn(actualOutput)
