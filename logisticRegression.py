@@ -9,6 +9,13 @@ def getGHR(ghr):
 	GHR = ghr
 	return GHR
 
+def sigmoid(val):
+	if val < 0:
+		return 1 - 1/(1+math.exp(val))
+	val = -1*val
+	return 1 / 	(1 + math.exp(val))
+
+
 def helperPredict(GHR, branchNo):
 	inp = GHR
 	wx = 0
@@ -17,7 +24,9 @@ def helperPredict(GHR, branchNo):
 		wx += inp[i]*weights[branchNo][i]
 
 	wx = wx * -1
-	prediction = 1 / (1 + math.exp(wx))
+	# prediction = 1 / (1 + math.exp(wx))
+	# https://stackoverflow.com/questions/36268077/overflow-math-range-error-for-log-or-exp
+	prediction = sigmoid(wx)
 
 	prediction = -1 if prediction < 0.5 else 1
 
