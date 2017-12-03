@@ -3,12 +3,16 @@ import pickle
 import numpy as np
 import logisticRegression as lr
 import perceptron as pt
+import learningVectorQuantization as lvq
 from globalVars import *
+from collections import deque
+
 
 class BranchPredictor(object):
 	
 	def __init__(self):
 		self.GHR          = [0]*NUM_OF_BRANCHES
+		self.GHR_HISTORY  = [deque([-1]*HISTORY) for _ in range(NUM_OF_BRANCHES)]
 		self.p_pred       = [0]*NUM_OF_BRANCHES
 		self.lr_pred      = [0]*NUM_OF_BRANCHES
 		self.lvq_pred     = [0]*NUM_OF_BRANCHES
@@ -30,14 +34,18 @@ class BranchPredictor(object):
 		lr.LRLearn(self.GHR, actOutput)
 
 	def lvq_predict(self):
-		pass
+		self.lvq_pred = lvq.LVQPredict(self.GHR_HISTORY)
 
-	def lvq_learn(self):
-		pass
+	def lvq_learn(self, actualOutput):
+		lvq.LVQLearn(self.GHR_HISTORY, actualOutput)
 
 	def updateGHR(self, output):
 		for i in range(NUM_OF_BRANCHES):
 			self.GHR[i] += output[i]
+			self.GHR_HISTORY[i].append(output[i])
+			self.GHR_HISTORY[i].popleft()
+		if(DEBUG):
+			print(self.GHR_HISTORY[0])
 
 	def calculateDiff(self, output):
 		if(DEBUG):
@@ -56,7 +64,7 @@ class BranchPredictor(object):
 
 bp = BranchPredictor()
 
-for s in range(15):
+for s in range(NUM_OF_SAMPLES):
 	sampleName = "sample" + str(s+1)
 	module = __import__(sampleName)
 
@@ -65,17 +73,18 @@ for s in range(15):
 		# Get the 3 predictions
 		bp.perceptron_predict()
 		bp.lr_predict()
-		# bp.lvq_predict()
+		bp.lvq_predict()
 		
 		# Run the actual Code
 		actualOutput = module.runCode()[0]
+		
 		# Send the actual O/P to model for updation
 		bp.perceptron_learn(actualOutput)
 		bp.lr_learn(actualOutput)
-		# bp.lvq_learn(actualOutput)
+		bp.lvq_learn(actualOutput)
 		bp.calculateDiff(actualOutput)
 
 		# Update GHR for next iterations
 		bp.updateGHR(actualOutput)
 
-bp.calculateAccuracy(ITERATION*15)
+bp.calculateAccuracy(ITERATION*NUM_OF_SAMPLES)
