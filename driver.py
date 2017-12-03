@@ -3,7 +3,6 @@ import pickle
 import numpy as np
 import logisticRegression as lr
 import perceptron as pt
-from sample1 import runCode
 from globalVars import *
 
 class BranchPredictor(object):
@@ -53,26 +52,30 @@ class BranchPredictor(object):
 		print(" Perceptron                   : ", self.accuracy["perceptron"] / iterations)
 		print(" Logistic Regression          : ", self.accuracy["logistic"]   / iterations) 
 		print(" Learning Vector Quantization : ", self.accuracy["LVQ"]        / iterations)
-
+		# print (self.accuracy)
 
 bp = BranchPredictor()
 
-for _ in range(ITERATION):
+for s in range(15):
+	sampleName = "sample" + str(s+1)
+	module = __import__(sampleName)
 
-	# Get the 3 predictions
-	bp.perceptron_predict()
-	bp.lr_predict()
-	# bp.lvq_predict()
-	
-	# Run the actual Code
-	actualOutput = runCode()[0]
-	# Send the actual O/P to model for updation
-	bp.perceptron_learn(actualOutput)
-	bp.lr_learn(actualOutput)
-	# bp.lvq_learn(actualOutput)
-	bp.calculateDiff(actualOutput)
+	for _ in range(ITERATION):
 
-	# Update GHR for next iterations
-	bp.updateGHR(actualOutput)
+		# Get the 3 predictions
+		bp.perceptron_predict()
+		bp.lr_predict()
+		# bp.lvq_predict()
+		
+		# Run the actual Code
+		actualOutput = module.runCode()[0]
+		# Send the actual O/P to model for updation
+		bp.perceptron_learn(actualOutput)
+		bp.lr_learn(actualOutput)
+		# bp.lvq_learn(actualOutput)
+		bp.calculateDiff(actualOutput)
 
-bp.calculateAccuracy(ITERATION)
+		# Update GHR for next iterations
+		bp.updateGHR(actualOutput)
+
+bp.calculateAccuracy(ITERATION*15)

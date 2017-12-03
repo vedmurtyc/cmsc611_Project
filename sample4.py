@@ -1,9 +1,6 @@
 import random
 from globalVars import *
 
-# NUM_BRANCHES = 10
-# ITERATIONS   = 1
-
 def branches(i):
 	arr = [-1]*NUM_OF_BRANCHES
 	
@@ -15,17 +12,17 @@ def branches(i):
 		i *= 2
 		arr[1] = 1
 
-	if (i * 2 == 2):
-		i = 1
-		arr[2] = 1
+		if (i * 2 == 2):
+			i = 1
+			arr[2] = 1
 
 	if (i//2 == 0):
 		i *= 4
 		arr[3] = 1
 
-	if (i* 4 == 16):
-		i = 2
-		arr[4] = 1
+		if (i* 4 == 16):
+			i = 2
+			arr[4] = 1
 
 	if ((i+3)%2 == 1):
 		i = i + 3
